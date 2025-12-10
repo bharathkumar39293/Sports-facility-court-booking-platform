@@ -1,6 +1,6 @@
 # Acorn-Globus Court Booking System
 
-A full-stack court booking system with dynamic pricing, availability management, and resource allocation.
+A full-stack court booking system with dynamic pricing, availability management, authentication, and resource allocation.
 
 ## Project Structure
 
@@ -19,6 +19,7 @@ A full-stack court booking system with dynamic pricing, availability management,
 - **Resource Management**: Coaches and equipment (rackets, shoes) booking
 - **Availability Engine**: Real-time availability checks for courts, coaches, and equipment
 - **Price Preview**: See pricing breakdown before confirming booking
+- **Auth**: JWT-based login/register with protected routes for admin actions
 
 ## Tech Stack
 
@@ -49,8 +50,9 @@ npm install
 
 3. Create `.env` file:
 ```
-MONGODB_URI=mongodb://localhost:27017/acorn-globus
+MONGODB_URI=mongodb://localhost:27017/acorn-globus   # or your Atlas URI
 PORT=4000
+JWT_SECRET=change-me
 ```
 
 4. Start the server:
@@ -86,35 +88,21 @@ Frontend will run on `http://localhost:3000`
 
 ## Seeding Data
 
-To seed the database with initial data, you can create a simple script or use MongoDB Compass/CLI to import the `seed-data.json` file.
+`seed-data.json` is already wired to `backend/scripts/seed.js`. After configuring `.env` and installing deps:
 
-Example seed script (create `backend/scripts/seed.js`):
-
-```js
-const mongoose = require('mongoose');
-const { connectDB } = require('../config/db');
-const Court = require('../models/Court');
-const Coach = require('../models/Coach');
-const Equipment = require('../models/Equipment');
-const PricingRule = require('../models/PricingRule');
-const seedData = require('../../seed-data.json');
-
-async function seed() {
-  await connectDB();
-  await Court.insertMany(seedData.courts);
-  await Coach.insertMany(seedData.coaches);
-  await Equipment.insertMany(seedData.equipment);
-  await PricingRule.insertMany(seedData.pricingRules);
-  console.log('Database seeded!');
-  process.exit(0);
-}
-
-seed();
+```
+cd backend
+npm run seed
 ```
 
-Run with: `node backend/scripts/seed.js`
+This loads courts, coaches, equipment, and pricing rules.
 
 ## API Endpoints
+
+### Auth
+- `POST /api/auth/register` - Create account and return JWT
+- `POST /api/auth/login` - Login and return JWT
+- `GET /api/auth/me` - Get current user (requires `Authorization: Bearer <token>`)
 
 ### Courts
 - `GET /api/courts` - Get all active courts
@@ -148,14 +136,7 @@ The system supports multiple pricing rule types:
 - Booking uses MongoDB transactions for atomicity
 - Equipment availability is calculated by summing overlapping bookings
 - For production, consider caching pricing rules with Redis
-- User authentication is not implemented in this skeleton (replace `temp-user-id` with actual auth)
+- Set a strong `JWT_SECRET` in production and keep it out of git
 
-## Next Steps
 
-1. Add user authentication (JWT/OAuth)
-2. Implement waitlist functionality
-3. Add email notifications
-4. Build admin dashboard for managing courts, coaches, and pricing rules
-5. Add booking cancellation and refund logic
-6. Implement payment gateway integration
 
