@@ -1,0 +1,23 @@
+{
+  "courts": [
+    { "name": "Court 1", "type": "indoor", "basePrice": 200 },
+    { "name": "Court 2", "type": "indoor", "basePrice": 200 },
+    { "name": "Court 3", "type": "outdoor", "basePrice": 150 },
+    { "name": "Court 4", "type": "outdoor", "basePrice": 150 }
+  ],
+  "equipment": [
+    { "name": "Racket", "type": "racket", "totalStock": 20, "pricePerItem": 50 },
+    { "name": "Shoes", "type": "shoe", "totalStock": 10, "pricePerItem": 80 }
+  ],
+  "coaches": [
+    { "name": "Arjun", "hourlyRate": 300, "availability": [ {"dayOfWeek":1,"startTime":"16:00","endTime":"21:00"} ] },
+    { "name": "Vikram", "hourlyRate": 250, "availability": [ {"dayOfWeek":2,"startTime":"14:00","endTime":"20:00"} ] },
+    { "name": "Neha", "hourlyRate": 280, "availability": [ {"dayOfWeek":5,"startTime":"10:00","endTime":"18:00"} ] }
+  ],
+  "pricingRules": [
+    { "name": "Peak Hours", "ruleType": "peak", "isActive": true, "config": { "startHour": 18, "endHour": 21, "multiplier": 1.5 } },
+    { "name": "Weekend Surcharge", "ruleType": "weekend", "isActive": true, "config": { "surcharge": 40 } },
+    { "name": "Indoor Premium", "ruleType": "courtType", "isActive": true, "config": { "type": "indoor", "surcharge": 80 } }
+  ]
+}
+
