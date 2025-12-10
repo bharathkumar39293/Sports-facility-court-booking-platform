@@ -4,10 +4,10 @@
 
 1. Go to https://www.mongodb.com/cloud/atlas/register
 2. Create a free account and cluster
-3. Get your connection string (looks like: `mongodb+srv://username:password@cluster.mongodb.net/acorn-globus`)
-4. Create `backend/.env` file:
+3. Get your connection string (template only, no real creds): `mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<db>?retryWrites=true&w=majority`
+4. Create `backend/.env` file with your own values (do not commit):
    ```
-   MONGODB_URI=mongodb+srv://your-connection-string-here
+   MONGODB_URI=mongodb+srv://<user>:<password>@<cluster>.mongodb.net/<db>?retryWrites=true&w=majority
    PORT=4000
    ```
 
