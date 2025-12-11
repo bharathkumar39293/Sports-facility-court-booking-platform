@@ -1,0 +1,51 @@
+version: '3.8'
+
+# IMPORTANT: Set actual environment variable values
+# Create a .env file in the root directory with:
+# JWT_SECRET=your-actual-generated-secret-key
+# Or export: export JWT_SECRET=$(openssl rand -base64 32)
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: court-booking-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: acorn-globus
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: court-booking-backend
+    ports:
+      - "4000:4000"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/acorn-globus
+      PORT: 4000
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: court-booking-frontend
+    ports:
+      - "3000:80"
+    environment:
+      # For production, change to your actual backend URL
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:4000/api}
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+
